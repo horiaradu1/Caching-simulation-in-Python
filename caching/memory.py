@@ -41,10 +41,10 @@ class CyclicCache(Memory):
 
     def lookup(self, address):
         if address in self.cache.keys():
-            print("Cyclic Cache Access", end="")
+            print("Cyclic Cache Access ", end="")
             return self.cache[address]
         else:
-            print("Cyclic Cache Access", end="")
+            print("Cyclic Cache Access ", end="")
             self.hit_count += 1
             string = str(address ^ 3).encode()
             value = hashlib.md5(string).hexdigest()[:8]
@@ -74,21 +74,27 @@ class LRUCache(Memory):
 
     def lookup(self, address):
         if address in self.cache.keys():
-            print("LRU Cache Access", end="")
-            self.cache[address][1] += 1
+            print("LRU Cache Access ", end="")
+            self.cache[address][1] = 0
+            for key in self.cache.keys():
+                if key != address:
+                    self.cache[key][1] += 1
             return self.cache[address][0]
         else:
-            print("LRU Cache Access", end="")
+            print("LRU Cache Access ", end="")
             self.hit_count += 1
             string = str(address ^ 3).encode()
             value = hashlib.md5(string).hexdigest()[:8]
             if len(self.cache) > self.max:
-                freq = math.inf
-                freq_key = None
+                last_address = list(self.cache.keys())[0]
+                maximum = 0
                 for key in self.cache.keys():
-                    if freq > self.cache[key][1]:
-                        freq = self.cache[key][1]
-                        freq_key = key
-                del self.cache[freq_key]
-            self.cache[address] = [value,1]
+                    if maximum < self.cache[key][1]:
+                        maximum = self.cache[key][1]
+                        last_address = key
+                del self.cache[last_address]
+            for key in self.cache.keys():
+                if key != address:
+                    self.cache[key][1] += 1
+            self.cache[address] = [value, 0]
             return value
