@@ -1,5 +1,6 @@
 import queue
 import hashlib
+import math
 from random import randrange
 
 
@@ -82,7 +83,7 @@ class LRUCache(Memory):
             string = str(address ^ 3).encode()
             value = hashlib.md5(string).hexdigest()[:8]
             if len(self.cache) > self.max:
-                freq = 99999999999999999999
+                freq = math.inf
                 freq_key = None
                 for key in self.cache.keys():
                     if freq > self.cache[key][1]:
