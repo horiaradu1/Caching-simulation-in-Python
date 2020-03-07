@@ -34,6 +34,26 @@ class CyclicCache(Memory):
 
     def __init__(self):
         super().__init__()
+        self.hit_count = 0
+        self.cache = {}
+        self.max = 3
+
+    def lookup(self, address):
+        if address in self.cache.keys():
+            print("Cyclic Cache Access", end="")
+            return self.cache[address]
+        else:
+            print("Cyclic Cache Access", end="")
+            self.hit_count += 1
+            string = str(address ^ 3).encode()
+            value = hashlib.md5(string).hexdigest()[:8]
+            if len(self.cache) > self.max:
+                replace = list(self.cache)[0]
+                del self.cache[replace]
+            self.cache[address] = value
+            return self.cache[address]
+
+
 
 
 class LRUCache(Memory):
@@ -47,3 +67,27 @@ class LRUCache(Memory):
 
     def __init__(self):
         super().__init__()
+        self.hit_count = 0
+        self.cache = {}
+        self.max = 3
+
+    def lookup(self, address):
+        if address in self.cache.keys():
+            print("LRU Cache Access", end="")
+            self.cache[address][1] += 1
+            return self.cache[address][0]
+        else:
+            print("LRU Cache Access", end="")
+            self.hit_count += 1
+            string = str(address ^ 3).encode()
+            value = hashlib.md5(string).hexdigest()[:8]
+            if len(self.cache) > self.max:
+                freq = 99999999999999999999
+                freq_key = None
+                for key in self.cache.keys():
+                    if freq > self.cache[key][1]:
+                        freq = self.cache[key][1]
+                        freq_key = key
+                del self.cache[freq_key]
+            self.cache[address] = [value,1]
+            return value
