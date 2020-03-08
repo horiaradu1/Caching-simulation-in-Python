@@ -55,8 +55,6 @@ class CyclicCache(Memory):
             return self.cache[address]
 
 
-
-
 class LRUCache(Memory):
     def name(self):
         return "LRU"
