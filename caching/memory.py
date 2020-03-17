@@ -1,6 +1,5 @@
 import queue
 import hashlib
-import math
 from random import randrange
 
 
@@ -41,13 +40,14 @@ class CyclicCache(Memory):
 
     def lookup(self, address):
         if address in self.cache.keys():
-            print("Cyclic Cache Access ", end="")
+            # print("Cyclic Cache Access ", end="")
             return self.cache[address]
         else:
-            print("Cyclic Cache Access ", end="")
-            self.hit_count += 1
-            string = str(address ^ 3).encode()
-            value = hashlib.md5(string).hexdigest()[:8]
+            # print("Memory Access", end=" ")
+            # self.hit_count += 1
+            # string = str(address ^ 3).encode()
+            # value = hashlib.md5(string).hexdigest()[:8]
+            value = super().lookup(address)
             if len(self.cache) > self.max:
                 replace = list(self.cache)[0]
                 del self.cache[replace]
@@ -72,17 +72,18 @@ class LRUCache(Memory):
 
     def lookup(self, address):
         if address in self.cache.keys():
-            print("LRU Cache Access ", end="")
+            # print("LRU Cache Access ", end="")
             self.cache[address][1] = 0
             for key in self.cache.keys():
                 if key != address:
                     self.cache[key][1] += 1
             return self.cache[address][0]
         else:
-            print("LRU Cache Access ", end="")
-            self.hit_count += 1
-            string = str(address ^ 3).encode()
-            value = hashlib.md5(string).hexdigest()[:8]
+            # print("Memory Access", end=" ")
+            # self.hit_count += 1
+            # string = str(address ^ 3).encode()
+            # value = hashlib.md5(string).hexdigest()[:8]
+            value = super().lookup(address)
             if len(self.cache) > self.max:
                 last_address = list(self.cache.keys())[0]
                 maximum = 0
