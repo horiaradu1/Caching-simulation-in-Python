@@ -1,7 +1,6 @@
 import queue
 import hashlib
 from random import randrange
-import random
 
 
 # Various implementations of caching. This file has stub implementations.
@@ -33,7 +32,7 @@ class CyclicCache(Memory):
         super().__init__()
         self.hit_count = 0
         self.cache = {}
-        self.max = size - 1
+        self.max = size
 
     def name(self):
         return "Cyclic"
@@ -48,7 +47,7 @@ class CyclicCache(Memory):
             # string = str(address ^ 3).encode()
             # value = hashlib.md5(string).hexdigest()[:8]
             value = super().lookup(address)
-            if len(self.cache) > self.max:
+            if len(self.cache) == self.max:
                 replace = list(self.cache)[0]
                 del self.cache[replace]
             self.cache[address] = value
@@ -62,7 +61,7 @@ class LRUCache(Memory):
         super().__init__()
         self.hit_count = 0
         self.cache = {}
-        self.max = size - 1
+        self.max = size
 
     def name(self):
         return "LRU"
@@ -81,7 +80,7 @@ class LRUCache(Memory):
             # string = str(address ^ 3).encode()
             # value = hashlib.md5(string).hexdigest()[:8]
             value = super().lookup(address)
-            if len(self.cache) > self.max:
+            if len(self.cache) == self.max:
                 last_address = list(self.cache.keys())[0]
                 maximum = 0
                 for key in self.cache.keys():
@@ -103,7 +102,7 @@ class RandomCache(Memory):
         super().__init__()
         self.hit_count = 0
         self.cache = {}
-        self.max = size - 1
+        self.max = size
 
     def name(self):
         return "Random"
@@ -118,8 +117,8 @@ class RandomCache(Memory):
             # string = str(address ^ 3).encode()
             # value = hashlib.md5(string).hexdigest()[:8]
             value = super().lookup(address)
-            if len(self.cache) > self.max:
-                replace = list(self.cache.keys())[random.randint(0, 3)]
+            if len(self.cache) == self.max:
+                replace = list(self.cache.keys())[randrange(0, self.max)]
                 del self.cache[replace]
             self.cache[address] = value
             return self.cache[address]
