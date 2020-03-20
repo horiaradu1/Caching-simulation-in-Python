@@ -43,10 +43,6 @@ class CyclicCache(Memory):
             # print("Cyclic Cache Access ", end="")
             return self.cache[address]
         else:
-            # print("Memory Access", end=" ")
-            # self.hit_count += 1
-            # string = str(address ^ 3).encode()
-            # value = hashlib.md5(string).hexdigest()[:8]
             value = super().lookup(address)
             if len(self.cache) > self.max:
                 replace = list(self.cache)[0]
@@ -79,10 +75,6 @@ class LRUCache(Memory):
                     self.cache[key][1] += 1
             return self.cache[address][0]
         else:
-            # print("Memory Access", end=" ")
-            # self.hit_count += 1
-            # string = str(address ^ 3).encode()
-            # value = hashlib.md5(string).hexdigest()[:8]
             value = super().lookup(address)
             if len(self.cache) > self.max:
                 last_address = list(self.cache.keys())[0]
